@@ -10,7 +10,8 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.15.3"
+    "express": "^4.15.3",
+    "node-telegram-bot-api": "^0.30.0"
   },
   "engines": {
     "node": "8.x"

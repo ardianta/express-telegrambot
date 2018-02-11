@@ -3,6 +3,7 @@
 
 // init project
 var express = require('express');
+const TelegramBot = require('node-telegram-bot-api');
 var app = express();
 
 // we've started you off with Express, 
@@ -10,6 +11,36 @@ var app = express();
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
+
+const token = 'TELEGRAM_BOT_TOKEN';
+
+// Create a bot that uses 'polling' to fetch new updates
+const bot = new TelegramBot(token, {polling: true});
+
+
+app.get("/webhook", function (request, response) {
+  // Matches "/echo [whatever]"
+  bot.onText(/\/echo (.+)/, (msg, match) => {
+    // 'msg' is the received Message from Telegram
+    // 'match' is the result of executing the regexp above on the text content
+    // of the message
+
+    const chatId = msg.chat.id;
+    const resp = match[1]; // the captured "whatever"
+
+    // send back the matched "whatever" to the chat
+    bot.sendMessage(chatId, resp);
+  });
+
+  // Listen for any kind of message. There are different kinds of
+  // messages.
+  bot.on('message', (msg) => {
+    const chatId = msg.chat.id;
+
+    // send a message to the chat acknowledging receipt of their message
+    bot.sendMessage(chatId, 'Received your message');
+  });
+});
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (request, response) {
